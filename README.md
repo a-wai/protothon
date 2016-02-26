@@ -6,7 +6,7 @@ Il faut mettre les mains dans le cambouis : aucun back-office n'est fourni, à l
 Il est donc recommandé d'être familier avec les langages HTML/CSS et SQL.
 
 ### Paiement
-Les paiements sont gérés par [https://plus.payname.fr](Payname).
+Les paiements sont gérés par [Payname](https://plus.payname.fr).
 
 ### TODO
 
