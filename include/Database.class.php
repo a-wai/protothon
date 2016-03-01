@@ -28,10 +28,26 @@ class Database
 	{
 		return $this->db->close();
 	}
-	
-	public function updateHash($project, $newHash)
+
+	public function getLink($project, $options)
 	{
-		$result = $this->db->querySingle("UPDATE cw_projects SET proto_hash='".$newHash."' WHERE id=".$project);
+		return $this->db->querySingle("SELECT hash, link FROM cw_links WHERE project_id=".$project." AND options='".$options."'", true);
+	}
+
+	public function updateHash($project, $options, $hash, $link)
+	{
+		$check = $this->db->querySingle("SELECT * FROM cw_links WHERE project_id=".$project." AND options='".$options."'", true);
+		if ($check == false)
+		{
+			// No existing record
+			$result = $this->db->querySingle("INSERT INTO cw_links VALUES (".$project.", '".$options."', '".$hash."', '".$link."')");
+		}
+		else if ($hash != $check["hash"])
+		{
+			// Create new record
+			$result = $this->db->querySingle("UPDATE cw_links SET hash='".$hash."', link='".$link."' WHERE project_id=".$project." AND options='".$options."'");
+		}
+		
 		if (isset($result))
 		{
 			return false;

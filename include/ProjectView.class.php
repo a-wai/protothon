@@ -58,6 +58,8 @@ class ProjectView
     	$script .= "];\n\n";
     }
 
+    $script .= "var optionStr = \"\";\n\n";
+
     $script .= "var basePrice = ".$this->project->proto_price.";\n";
     $script .= "var baseLink = \"#\";\n\n";
 
@@ -79,10 +81,12 @@ class ProjectView
     }
     $script .= "\n";
 
+    $script .= "	optionStr = \"\";\n";
     // Add supplements prices
     for ($i = 1; $i <= $idx; $i++)
     {
     	$script .= "	price += supp".$i."[idx".$i."];\n";
+    	$script .= "	optionStr += idx".$i.";\n";
     }
     $script .= "\n	currentPrice = price;\n\n";
 
@@ -96,8 +100,8 @@ class ProjectView
 	 * and the new hash retrieved from the Payname payment
 	 */
 
-    $script .= "function updateHash(newHash) {\n";
-    $script .= "	var request = \"id=".$this->project->id."&hash=\" + newHash;\n";
+    $script .= "function updateHash(newHash, newLink) {\n";
+    $script .= "	var request = \"id=".$this->project->id."&options=\" + optionStr + \"&hash=\" + newHash + \"&link=\" + newLink;\n";
     $script .= "	var xhttp = new XMLHttpRequest();\n\n";
     $script .= "	xhttp.open(\"POST\", \"ajax/hash.php\", false);\n";
     $script .= "	xhttp.setRequestHeader(\"Content-type\", \"application/x-www-form-urlencoded\");\n";
@@ -117,7 +121,7 @@ class ProjectView
 	 */
 
     $script .= "function generatePayment() {\n";
-    $script .= "	var request = \"token=".$token."&back_url=\";\n";
+    $script .= "	var request = \"id=".$this->project->id."&options=\" + optionStr + \"&token=".$token."&back_url=\";\n";
     $script .= "	var xhttp = new XMLHttpRequest();\n";
     $script .= "	var answer;\n";
     $script .= "	var paymentData;\n\n";
@@ -137,7 +141,7 @@ class ProjectView
     $script .= "	answer = xhttp.responseText;\n\n";
     $script .= "	paymentData = JSON.parse(answer);\n";
     $script .= "	if (paymentData.success) {\n";
-    $script .= "		updateHash(paymentData.hash);\n";
+    $script .= "		updateHash(paymentData.hash, paymentData.link);\n";
     $script .= "		document.getElementById(\"protoLink\").href = paymentData.link;\n";
     $script .= "		window.location.assign(paymentData.link);\n";
     $script .= "	}\n";

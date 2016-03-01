@@ -5,9 +5,9 @@ require_once $basedir."/include/Database.class.php";
 
 $db = new Database($dbfile);
 
-if (isset($_POST["id"]) && isset($_POST["hash"]))
+if (isset($_POST["id"]) && isset($_POST["options"]) && isset($_POST["hash"]) && isset($_POST["link"]))
 {
-	if ($db->updateHash($_POST["id"], $_POST["hash"]) == false)
+	if ($db->updateHash($_POST["id"], $_POST["options"], $_POST["hash"], $_POST["link"]) == false)
 	{
 		echo "ERROR";
 	}

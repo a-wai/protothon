@@ -69,6 +69,20 @@ else
 	echo "Table 'cw_prj_opts' created successfully !<br>\n";
 }
 
+if (!$db->exec("CREATE TABLE cw_links
+              (project_id INTEGER NOT NULL,
+               options TEXT NOT NULL,
+               hash TEXT,
+               link TEXT,
+               PRIMARY KEY ('project_id', 'options'))"))
+{
+  echo $db->lastErrorMsg();
+}
+else
+{
+	echo "Table 'cw_links' created successfully !<br>\n";
+}
+
 if (!$db->exec("CREATE TABLE cw_payments
               (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
                project_id INTEGER,
